@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  mysql:
+    image: mysql
+    restart: always
+    volumes:
+       - db-data:/var/lib/mysql/data
+    networks:
+       - backend
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+    env_file: .env
+
+  php:
+    build:
+      context: .
+      dockerfile: php.Dockerfile
+    restart: always
+    ports:
+      - "8080:80"
+      - "8022:22"
+    networks:
+      - backend
+      - frontend
+    links: 
+      - mysql:db
+    deploy:
+      mode: replicated
+      replicas: 2
+      endpoint_mode: vip
+    env_file: .env
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    volumes:
+      - /sessions
+    links: 
+      - mysql:db
+    networks:
+        - backend
+        - frontend
+    env_file: .env
+
+volumes:
+  db-data:
+
+networks:
+  backend:
+    internal: true
+  frontend:

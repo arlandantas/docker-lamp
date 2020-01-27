@@ -18,14 +18,6 @@ cd /usr/src/app
 echo "Updating source code"
 echo $git_user:$git_password | git pull
 
-# Check if isset $php_root
-if [ ! -z "${php_root}" ]
-then
-    # Open this directory
-    cd $php_root
-    echo "Opened root folder"
-fi
-
 # Check if isset $init_sh
 if [ ! -z "${init_sh}" ]
 then
@@ -34,6 +26,15 @@ then
     sh $init_sh
 else
     echo "init.sh not found"
+    
+    # Check if isset $php_root
+    if [ ! -z "${php_root}" ]
+    then
+        # Open this directory
+        cd $php_root
+        echo "Opened root folder"
+    fi
+    
     echo "Starting server at 80 port"
     # Starts http server at port 80
     php -S 0.0.0.0:80

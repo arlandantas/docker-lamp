@@ -14,18 +14,29 @@ echo "MySQL available!"
 # Open source root directory
 cd /usr/src/app
 
+# Update source
+echo "Updating source code"
+echo $git_user:$git_password | git pull
+
+# Check if isset $php_root
+if [ ! -z "${php_root}" ]
+then
+    # Open this directory
+    cd $php_root
+    echo "Opened root folder"
+fi
+
 # Check if isset $init_sh
 if [ ! -z "${init_sh}" ]
 then
+    echo "Executing source init.sh"
     # Execute him
     sh $init_sh
 else
-    # Check if isset $php_root
-    if [ ! -z "${php_root}" ]
-    then
-        # Open this directory
-        cd $php_root
-    fi
+    echo "init.sh not found"
+    echo "Starting server at 80 port"
     # Starts http server at port 80
     php -S 0.0.0.0:80
+    # When server dies
+    echo "Server stopped"
 fi
